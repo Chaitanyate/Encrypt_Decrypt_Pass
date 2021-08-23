@@ -14,7 +14,9 @@ const App=()=>{
   
   const handleSubmit = (evt) => {
       evt.preventDefault();
+		// genencrypt()
 	   console.log(encPass);
+
   }
   const newhandleSubmit = (ev) => {
 	ev.preventDefault();
@@ -35,6 +37,7 @@ const App=()=>{
 	
 	}
 	const generateCrypt=()=>{
+		console.log("PrivateKey", privateKey);
 		keystore = web3.eth.accounts.encrypt(privateKey, encPass);
 		setEncryptedKey(keystore);
 		console.log("encrypted",keystore);
