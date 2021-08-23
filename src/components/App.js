@@ -10,21 +10,15 @@ const App=()=>{
 	const [encPass,setEncPass] = useState("");
 	const [decPass,setDecPass] = useState("");
 	const[privateKey,setPrivateKey] = useState("");
+	const[encryptedKey, setEncryptedKey] = useState("");
   
   const handleSubmit = (evt) => {
       evt.preventDefault();
-		genencrypt()
 	   console.log(encPass);
-	//  console.log(encrypti());
-      //alert(`Submitting Name ${name}`)
   }
   const newhandleSubmit = (ev) => {
 	ev.preventDefault();
-  //   var b = encrypti()
-  //   console.log(b);
-	gendecrypt()
 	console.log(decPass);
-	//alert(`Submitting Name ${name}`)
 }
 		var a= web3.eth.accounts.create();
 		var walletprivate = a["privateKey"];
@@ -36,35 +30,34 @@ const App=()=>{
 	const createwallet=()=>{
 		a= web3.eth.accounts.create();
 		setPrivateKey(a.privateKey);
-		console.log(a);
-		console.log(a.privateKey);
+		console.log("Waller is created");
 		console.log('PrivateKey',privateKey);
 	
 	}
-	const genencrypt=()=>{
+	const generateCrypt=()=>{
 		keystore = web3.eth.accounts.encrypt(privateKey, encPass);
-		console.log(keystore);
+		setEncryptedKey(keystore);
+		console.log("encrypted",keystore);
 
 	}
-	const gendecrypt=()=>{
-		var decrpt= web3.eth.accounts.decrypt(keystore, decPass);
-		//const newData1 =decrpt.json()
-		console.log('The decrypted private key is:'+decrpt.privateKey);
-		//newDec(decrpt.privateKey);
+	const generateDecrypt=()=>{
+		var decrpt= web3.eth.accounts.decrypt(encryptedKey, decPass);
+		console.log("De-crypted:",decrpt);
 
 	}
 	return (
 		
 	<div>
-		<form onSubmit={handleSubmit}>
+		{/* <form onSubmit={handleSubmit}>
   <label>
     Password:
     <input type="Password" value={encPass} onChange={e=>setEncPass(e.target.value)} />
   </label>
   <button >Encrypt</button>
   
-</form><br/>
-<form onSubmit={ newhandleSubmit} >
+</form><br/> */}
+
+{/* <form onSubmit={ newhandleSubmit} >
   <label>
     Dec Password:
     <input type="Password" value={decPass} onChange={f=>setDecPass(f.target.value)} />
@@ -75,8 +68,17 @@ const App=()=>{
   
   
 </form><br/>
-<br></br>
-
+<br></br> */}
+<div className="encryption-container">
+	<label htmlFor="password">Password</label>
+	<input id="password" type="" value={encPass} onChange={e=>setEncPass(e.target.value)}></input>
+	<button onClick={generateCrypt}>Encrypt</button>
+</div> <br/>
+<div className="decryption-container">
+<label htmlFor="re-enter-password">Re-Enter Password</label>
+	<input id="re-enter-password" type="" value={decPass} onChange={e=>setDecPass(e.target.value)}></input>
+	<button onClick={generateDecrypt}>Decrypt</button>
+</div>
 		
   {/* <button onClick={createwallet}>create and Encrypt</button> */}
   <br></br>
