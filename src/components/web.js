@@ -1,9 +1,3 @@
-// import React,{useState,useEffect} from "react";
-// import Web3 from "web3";
-// const web3 = new Web3(Web3.provider.Httpprovider());
-// web3.setProvider('wss://rinkeby.infura.io/ws/v3/51a353c7b17a437a82de50c74bc12770'); // infura RPC
-// var Accounts = require('web3-eth-accounts');
-// var accounts = new Accounts('http://localhost:3000'); 
 
 import Web3 from 'web3';
 var web3; 

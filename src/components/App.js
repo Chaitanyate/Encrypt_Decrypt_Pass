@@ -1,17 +1,68 @@
 import React,{useEffect,useState} from "react";
 import web3 from "./web";
+import Key from './keys'
+import Navigation from "./nav";
+import Bitcoin from './bitcoin';
+
+import {BrowserRouter,Route,Switch,Link} from 'react-router-dom';
+
 const App=()=>{
 
-	const[store,newStore]=useState([]);
-	const[dec,newDec]=useState([]);
 	useEffect(()=>{
 		createwallet();
+	
+	},[])
+	useEffect(()=>{
+		bitcoinFunction();
+		
+		
 	},[])
 	const [encPass,setEncPass] = useState("");
 	const [decPass,setDecPass] = useState("");
 	const[privateKey,setPrivateKey] = useState("");
 	const[encryptedKey, setEncryptedKey] = useState("");
-  
+	const[isError,setIsError]=useState("");
+	const[isError1,setIsError1]=useState("");
+	const[isError2,setIsError2]=useState("");
+
+
+
+	const bitcoinFunction=()=>{
+		const bip32 = require('bip32')
+const bip39 = require('bip39')
+const bitcoin = require('bitcoinjs-lib')
+
+//defining network
+const network = bitcoin.networks.testnet //use network.bitcoin for mainnet
+
+//derivation path
+const path = `m/44'/1'/0'/0` //use m/44'/0'/0'/0 for mainnet
+
+let mnemonic = bip39.generateMnemonic()
+const seed = bip39.mnemonicToSeedSync(mnemonic)
+let root = bip32.fromSeed(seed, network)
+
+let account = root.derivePath(path)
+let node = account.derive(0).derive(0)
+
+let btcAddress = bitcoin.payments.p2pkh({
+    pubkey: node.publicKey,
+    network: network,
+}).address
+
+console.log(`
+    Bitcoin Wallet generated:
+    Address: ${btcAddress},
+    Key: ${node.toWIF()},
+    Mnemonic: ${mnemonic}
+`)
+
+	}
+
+
+		
+
+//	console.log(setIsError)
   const handleSubmit = (evt) => {
       evt.preventDefault();
 		// genencrypt()
@@ -32,79 +83,93 @@ const App=()=>{
 	const createwallet=()=>{
 		a= web3.eth.accounts.create();
 		setPrivateKey(a.privateKey);
-		console.log("Waller is created");
+		console.log("Wallet is created");
 		console.log('PrivateKey',privateKey);
 	
 	}
+	const callpass=()=>{
+		if (encPass.length!==0){
+			generateCrypt()
+		}
+		
+		else{
+			// <Text>NO password</Text>
+			//alert("Password fields cannot be empty")
+			setIsError("Password fiels should not be empty")
+			
+			
+		}
+		
+	}
+	const newCallpass=()=>{
+		if (decPass!==encPass){
+			setIsError2("Password is not matching")
+		}
+		else if (decPass.length!==0){
+			generateDecrypt()
+		}
+		 
+
+		else{
+			setIsError1("Password fiels should not be empty")
+			
+		}
+		
+	}
+	// if(encPass!==decPass){
+	// 	alert("Password Mismatch")
+	// }
+	
 	const generateCrypt=()=>{
 		console.log("PrivateKey", privateKey);
 		keystore = web3.eth.accounts.encrypt(privateKey, encPass);
 		setEncryptedKey(keystore);
 		console.log("encrypted",keystore);
-
+		
 	}
 	const generateDecrypt=()=>{
 		var decrpt= web3.eth.accounts.decrypt(encryptedKey, decPass);
 		console.log("De-crypted:",decrpt);
 
 	}
+	
 	return (
 		
 	<div>
-		{/* <form onSubmit={handleSubmit}>
-  <label>
-    Password:
-    <input type="Password" value={encPass} onChange={e=>setEncPass(e.target.value)} />
-  </label>
-  <button >Encrypt</button>
-  
-</form><br/> */}
-
-{/* <form onSubmit={ newhandleSubmit} >
-  <label>
-    Dec Password:
-    <input type="Password" value={decPass} onChange={f=>setDecPass(f.target.value)} />
+		
+<div>
 	
-
-  </label>
-  <button onClick={gendecrypt}>Decrypt</button>
-  
-  
-</form><br/>
-<br></br> */}
+</div>
 <div className="encryption-container">
 	<label htmlFor="password">Password</label>
-	<input id="password" type="" value={encPass} onChange={e=>setEncPass(e.target.value)}></input>
-	<button onClick={generateCrypt}>Encrypt</button>
+	<input id="password" type="password" value={encPass} onChange={e=>setEncPass(e.target.value)}></input>
+	
+	
+	
+	<button onClick={callpass}>Encrypt</button>
+	{isError}
+	
 </div> <br/>
 <div className="decryption-container">
 <label htmlFor="re-enter-password">Re-Enter Password</label>
-	<input id="re-enter-password" type="" value={decPass} onChange={e=>setDecPass(e.target.value)}></input>
-	<button onClick={generateDecrypt}>Decrypt</button>
+	<input id="re-enter-password" type="password" value={decPass} onChange={e=>setDecPass(e.target.value)}></input>
+
+	<button onClick={newCallpass}>Decrypt</button>
+	{isError1}
+	{isError2}
+	
+	
+
 </div>
 		
-  {/* <button onClick={createwallet}>create and Encrypt</button> */}
+  
   <br></br>
   
   <br></br>
 
   <br/>
-  
+</div>
 
-  
-  
-
-		{/* {store.address} */}
-		{/* <h2>
-			{
-			store.map((i)=>{
-				return i.cyphertext
-
-			})}
-		</h2> */}
-  
-
-	</div>
 	)
 }
 export default App;
