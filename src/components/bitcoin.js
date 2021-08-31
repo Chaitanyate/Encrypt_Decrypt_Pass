@@ -1,11 +1,5 @@
 import React,{useEffect} from "react";
 
-const NewName=()=>{
-
-useEffect(()=>{
-    BitcoinFunction();
-})
-
 const BitcoinFunction=()=>{
 const bip32 = require('bip32')
 const bip39 = require('bip39')
@@ -36,14 +30,7 @@ Key: ${node.toWIF()},
 Mnemonic: ${mnemonic}
 `)
 
-}
-return(
-    <div>
-
-   
-    </div>
-)
 
 
 }
-export default NewName;
+export default BitcoinFunction;
