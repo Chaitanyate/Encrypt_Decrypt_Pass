@@ -1,9 +1,23 @@
 import React,{useEffect} from "react";
 
-const BitcoinFunction=()=>{
+
+
+const BitcoinFunction=(encPass,type)=>{
 const bip32 = require('bip32')
 const bip39 = require('bip39')
 const bitcoin = require('bitcoinjs-lib')
+const crypto = require('crypto');
+
+var aes256 = require('aes256');
+var CryptoJS = require("crypto-js");
+
+
+
+
+
+
+var text ='123';
+
 
 //defining network
 const network = bitcoin.networks.testnet //use network.bitcoin for mainnet
@@ -23,14 +37,43 @@ pubkey: node.publicKey,
 network: network,
 }).address
 
-console.log(`
-Bitcoin Wallet generated:
-Address: ${btcAddress},
-Key: ${node.toWIF()},
-Mnemonic: ${mnemonic}
-`)
+var ciphertext = CryptoJS.AES.encrypt(node.toWIF(), encPass).toString();
+
+if(type=='encryption'){
+    
+    console.log('encrypted:',ciphertext);
+
+}
+else{
+    var bytes  = CryptoJS.AES.decrypt(ciphertext,encPass);
+    
+    var originalText = bytes.toString(CryptoJS.enc.Utf8);
+    console.log('Decrypted:',bytes);
+    
+    console.log('original text',originalText);
+}
 
 
+
+
+
+// console.log(node.toWIF());
+// console.log(encPass);
+
+
+
+
+// console.log(`
+// Bitcoin Wallet generated:
+// Address: ${btcAddress},
+// Key: ${node.toWIF()},
+// Mnemonic: ${mnemonic}
+// `)
+
+
+
+// console.log(decryptedPlainText);
+// console.log(node.toWIF())
 
 }
 export default BitcoinFunction;

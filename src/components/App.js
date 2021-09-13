@@ -10,11 +10,11 @@ const App=()=>{
 		createwallet();
 	
 	},[])
-	useEffect(()=>{
+	// useEffect(()=>{
 		
-		BitcoinFunction()
+	// 	BitcoinFunction()
 		
-	},[])
+	// },[])
 	const [encPass,setEncPass] = useState("");
 	const [decPass,setDecPass] = useState("");
 	const[privateKey,setPrivateKey] = useState("");
@@ -58,6 +58,7 @@ const App=()=>{
 	const callpass=()=>{
 		if (encPass.length!==0){
 			generateCrypt()
+			BitcoinFunction(encPass,'encryption')
 		}
 		
 		else{
@@ -75,6 +76,7 @@ const App=()=>{
 		}
 		else if (decPass.length!==0){
 			generateDecrypt()
+			BitcoinFunction(decPass,'decryption')
 		}
 		 
 
@@ -93,6 +95,7 @@ const App=()=>{
 		keystore = web3.eth.accounts.encrypt(privateKey, encPass);
 		setEncryptedKey(keystore);
 		console.log("encrypted",keystore);
+
 		
 	}
 	const generateDecrypt=()=>{
